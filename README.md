@@ -16,7 +16,13 @@ The word that returns the highest probability is chosen to be the next word in t
 This process can be recursively ran until a desired text-length.
 
 ### RNN
+The approach that an RNN takes is to capture the context of text using recurrent connections. In other words, an RNN maintains a time-varying hidden state(s(t)) such that the input to an RNN is both the word embedding(x(t)) and the hidden state at the previous time step(s(t - 1)). Using this architecture, an RNN is able to store the context of previous words in its hidden state and represent semantic meaning across time. 
 
+Input to an RNN LM consists of a sequence of text; the output is a sequence of words that contains the predicted next word for each word in the input. The benefit of using an RNN
+is that this "sequence" can be of any length. As a result, there is no fixed window size that an RNN has to adhere to. For each sequence of text the RNN recieves, two actions are performed: predict the next word for each word in the sequence and calculate the new hidden state. For example, suppose an RNN LM that takes a sequence of length 4 as input 
+and the sentence, "The man found a <b>rock</b>" is provided. Then, the RNN would iterate over the sequence and predict the next word after "The" and "man" and "found", and so on. 
+
+For each prediction, the pipeline is as follows: 1. the current word is passed through an embedding layer to produce a word embedding, which is then linearly projected and added to a linear projection of the previous hidden state 2. An activation function, typically tanh or sigmoid, is applied to this result to produce the new hidden state 3. The new hidden state is passed through an output layer and softmax is applied to generate a distribution over all words in the vocabulary. During training, this distribution is compared against the true next word using cross entropy loss. During inference, the next word is chosen by either randomly sampling from the distribution or taking the argmax 4. Process the next word in the sequence and repeat until the entire sequence is processed. The key insight is that the input to the hidden layer relies on both the input word as well as the hidden state at the previous time step. However, in practice, the vanishing gradient problem means that older context tends to fade from the hidden state over long sequences, limiting the RNN's ability to capture long-range dependencies.
 
 
 ## References
